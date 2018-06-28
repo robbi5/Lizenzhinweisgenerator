@@ -32,7 +32,6 @@
     "node-polyglot": "^0.4.3",
     "piwik": "^1.0.4",
     "require-globify": "^1.3.0",
-    "scrollmagic": "^2.0.5",
-    "zeroclipboard": "^2.2.0"
+    "scrollmagic": "^2.0.5"
   }
 }

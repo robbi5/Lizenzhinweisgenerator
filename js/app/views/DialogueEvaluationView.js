@@ -4,14 +4,11 @@ var $ = require( 'jquery' ),
 	doneTemplate = require( '../templates/Done.handlebars' ),
 	dosAndDontsTemplate = require( '../templates/DosAndDonts.handlebars' ),
 	attributionTemplate = require( '../templates/Attribution.handlebars' ),
-	ZeroClipboard = require( 'zeroclipboard' ),
 	Clipboard = require( 'clipboard' ),
 	Messages = require( '../Messages' ),
 	Tracking = require( '../../tracking.js' ),
 	BackToTopButton = require( '../BackToTopButton' ),
 	moreInformationTemplate = require( '../templates/MoreInformation.handlebars' );
-
-ZeroClipboard.config( { swfPath: '//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.swf' } );
 
 /**
  * @param {DialogueEvaluation} evaluation
@@ -59,24 +56,6 @@ $.extend( DialogueEvaluationView.prototype, {
 		}, 800 );
 	},
 
-	_hasFlash: function() {
-		var hasFlash = false;
-		try {
-			var swf = new ActiveXObject( 'ShockwaveFlash.ShockwaveFlash' ); // jshint ignore:line
-			if( swf ) {
-				hasFlash = true;
-			}
-		} catch( e ) {
-			if( navigator.mimeTypes
-				&& navigator.mimeTypes[ 'application/x-shockwave-flash' ] !== undefined
-				&& navigator.mimeTypes[ 'application/x-shockwave-flash' ].enabledPlugin ) {
-				hasFlash = true;
-			}
-		}
-
-		return hasFlash;
-	},
-
 	_initIECopy: function( $button ) {
 		var self = this;
 
@@ -86,16 +65,6 @@ $.extend( DialogueEvaluationView.prototype, {
 
 			e.preventDefault();
 			self._tracking.trackEvent( 'Button', 'CopyAttribution' );
-		} );
-	},
-
-	_initFlashCopy: function( $button ) {
-		var self = this,
-			clipboard = new ZeroClipboard( $button );
-
-		clipboard.on( 'copy', function( e ) {
-			self._tracking.trackEvent( 'Button', 'CopyAttribution' );
-			self._copyAttribution( e, $button );
 		} );
 	},
 
@@ -129,8 +98,6 @@ $.extend( DialogueEvaluationView.prototype, {
 	_initCopyButton: function( $button ) {
 		if( window.clipboardData ) { // IE
 			this._initIECopy( $button );
-		} else if( this._hasFlash() ) { // flash
-			this._initFlashCopy( $button );
 		} else { // JS with hint when copying fails
 			this._initJSCopy( $button );
 		}
